@@ -12,18 +12,32 @@ def question1():
     hash.update(user_input.encode('utf-8'))
 
     # Display the hash in hex format
-    print(hash.digest())
+    print(hash.hexdigest())
 
-    # Step 3: Demonstrate the avalanche effect by reversing first and last character
-    modified_input = user_input[-1] + user_input[1:-1] + user_input[0]
+    # Step 3: Demonstrate the avalanche effect by flipping a single bit
+    # Convert user_input to binary (https://www.geeksforgeeks.org/python/python-convert-string-to-binary/)
+    binary_input = ''.join(format(ord(char), '08b') for char in user_input)
+
+    print("Flipped string: ", binary_input)
+    # Flip the first bit
+    first_bit = binary_input[0]
+
+    if first_bit == '0':
+        binary_input = '1' + binary_input[1:]
+    else:
+        binary_input = '0' + binary_input[1:]
+    
+    print("Unflipped string: ", binary_input)
 
     modified_hash = hashlib.sha256()
-    modified_hash.update(modified_input.encode('utf-8'))
 
-    print(modified_hash.digest())
+    # Update the hash object with our user input
+    # modified_hash.update(modified_input.encode('utf-8'))
+
+    # print(modified_hash.hexdigest())
 
     # Highlight the difference between the two hashes
-
+    
 
     # Return hash value for use in pre-image testing
     return hash
