@@ -1,10 +1,15 @@
 import hashlib
+import string
+import random
 
-def question1():
-    # Step 1: Take an arbitrary string as input from the user.
-    user_input = input("Enter a string: ")
 
-    # Step 2: Computes and displays its hash.
+# Step 1: Take an arbitrary string as input from the user, converted to uppercase to regulate all strings
+user_input = input("Enter a string: ").upper()
+
+def question1(input):
+
+    # Step 2: Compute and displays hash.
+    
     # Create a new hash object using sha256 which is used by Bitcoin
     hash = hashlib.sha256() 
 
@@ -19,7 +24,7 @@ def question1():
 
     print("\nFlipped string: ", binary_input)
     
-    # Flip the first bit
+    # Read the first bit then flip it
     first_bit = binary_input[0]
 
     if first_bit == '0':
@@ -44,12 +49,16 @@ def question1():
     print("\nOld Hash: " + hash_digest)
     print("New Hash: " + modified_digest)
 
+    if len(hash_digest) != len(modified_digest):
+        print("Error: Hash digests do not have matching length")
+        return None
+
     # Convert both hashes into binary format
     LENGTH = 256
 
     # Use .digest() method here for accuracy
-    binary_hash = ''.join(format(ord(char), '08b') for char in hash.digest())
-    binary_modified = ''.join(format(ord(char), '08b') for char in modified_hash.digest())
+    binary_hash = ''.join(format(byte, '08b') for byte in hash.digest())
+    binary_modified = ''.join(format(byte, '08b') for byte in modified_hash.digest())
 
     # XOR the hashes to look for differences
     xor_string = ''
@@ -61,12 +70,36 @@ def question1():
 
         if current == '1':
             flipped_bits += 1
+
+    print("\n---Analysis---")
+    avalanche_effect = flipped_bits / LENGTH
+    print(f"Avalanche Effect = {avalanche_effect} (Higher is better)")
     
-    print(flipped_bits)
-    avalance_effect = flipped_bits / LENGTH
-    print("Avalance Effect = ", avalance_effect)
+    # print("Binary XOR Difference: ", xor_string)
 
-    # Return hash value for use in pre-image testing
-    return hash
+    # Return hash value and original string length for use in pre-image testing
+    return hash.hexdigest(), len(user_input)
 
-question1()
+target_hash, string_length = question1(user_input)
+
+# Pre-image resistance
+print("\n---Pre-image Resistance Tests---")
+print("Target Hash:", target_hash)
+
+MAX_ATTEMPTS = 10 # Adjust as needed
+
+guess_hash = hashlib.sha256()
+
+for i in range(MAX_ATTEMPTS):
+    # Randomly generate a string of same length and case as user input
+    guess = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(string_length))
+
+    print(f"\nAttempt {i + 1}: {guess}")
+    
+    guess_hash.update(guess.encode('utf-8'))
+    guess_digest = guess_hash.hexdigest()
+    print(guess_digest)
+
+    if guess_digest == target_hash:
+        print("MATCH FOUND!")
+        break
