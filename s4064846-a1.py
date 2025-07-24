@@ -2,7 +2,6 @@ import hashlib
 import string
 import random
 
-
 # Step 1: Take an arbitrary string as input from the user, converted to uppercase to regulate all strings
 user_input = input("Enter a string: ").upper()
 
@@ -22,7 +21,7 @@ def question1(input):
     # Source: https://www.geeksforgeeks.org/python/python-convert-string-to-binary/
     binary_input = ''.join(format(ord(char), '08b') for char in user_input)
 
-    print("\nFlipped string: ", binary_input)
+    print("\nUnflipped string: ", binary_input)
     
     # Read the first bit then flip it
     first_bit = binary_input[0]
@@ -32,7 +31,7 @@ def question1(input):
     else:
         binary_input = '0' + binary_input[1:]
     
-    print("Unflipped string: ", binary_input)
+    print("Flipped string: ", binary_input)
 
     # Convert the binary string into an encoded, hashable string
     # Source: https://stackoverflow.com/questions/32675679/convert-binary-string-to-bytearray-in-python-3
@@ -74,8 +73,6 @@ def question1(input):
     print("\n---Analysis---")
     avalanche_effect = flipped_bits / LENGTH
     print(f"Avalanche Effect = {avalanche_effect} (Higher is better)")
-    
-    # print("Binary XOR Difference: ", xor_string)
 
     # Return hash value and original string length for use in pre-image testing
     return hash.hexdigest(), len(user_input)
