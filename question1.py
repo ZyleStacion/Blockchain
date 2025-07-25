@@ -83,7 +83,7 @@ target_hash, string_length = question1(user_input)
 print("\n---Pre-image Resistance Tests---")
 print("Target Hash:", target_hash)
 
-MAX_ATTEMPTS = 10 # Adjust as needed
+MAX_ATTEMPTS = 500000 # Adjust as needed
 
 guess_hash = hashlib.sha256()
 
